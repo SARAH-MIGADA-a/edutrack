@@ -1,0 +1,314 @@
+{% extends 'core/base.html' %}
+
+{% block page_title %}Admin Dashboard - EduTrack{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2ecc71;
+        --background-color: #f4f6f9;
+        --card-background: #ffffff;
+        --text-color-dark: #2c3e50;
+        --text-color-light: #6c757d;
+        --transition-speed: 0.3s;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: var(--background-color);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.6;
+    }
+
+    .dashboard-container {
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stats-card {
+        background: var(--card-background);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(to right, #3498db, #2ecc71);
+    }
+
+    .stats-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-number {
+        font-size: 2.5em;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+
+    .stats-label {
+        color: var(--text-color-light);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9em;
+    }
+
+    .dashboard-section {
+        background: var(--card-background);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    .dashboard-section h2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        color: var(--text-color-dark);
+    }
+
+    .dashboard-section h2 i {
+        margin-right: 15px;
+        color: var(--primary-color);
+    }
+
+    .user-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all var(--transition-speed);
+    }
+
+    .user-list-item:hover {
+        background-color: #f0f0f0;
+        transform: translateX(10px);
+    }
+
+    .user-info {
+        flex-grow: 1;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: var(--text-color-dark);
+        margin-bottom: 5px;
+    }
+
+    .user-email {
+        color: var(--text-color-light);
+        font-size: 0.9em;
+    }
+
+    .notification-list-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all var(--transition-speed);
+    }
+
+    .notification-list-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    .notification-icon {
+        margin-right: 15px;
+        font-size: 1.5em;
+        opacity: 0.7;
+    }
+
+    .notification-content {
+        flex-grow: 1;
+    }
+
+    .notification-time {
+        color: var(--text-color-light);
+        font-size: 0.8em;
+        margin-top: 5px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        color: var(--text-color-light);
+    }
+
+    .empty-state i {
+        font-size: 3em;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-container {
+            padding: 10px;
+        }
+
+        .dashboard-section {
+            padding: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="stats-grid">
+        <div class="stats-card">
+            <div class="stats-number">{{ students.count }}</div>
+            <div class="stats-label">Total Students</div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-number">{{ teachers.count }}</div>
+            <div class="stats-label">Total Teachers</div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-number">{{ notifications.count }}</div>
+            <div class="stats-label">System Notifications</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="dashboard-section">
+                <h2>
+                    <span><i class="fas fa-user-graduate"></i> Registered Students</span>
+                    <span class="badge bg-primary">{{ students.count }}</span>
+                </h2>
+                {% if students %}
+                    <ul class="list-unstyled">
+                        {% for student in students %}
+                            <li class="user-list-item">
+                                <div class="user-info">
+                                    <div class="user-name">{{ student.name }}</div>
+                                    <div class="user-email">{{ student.email }}</div>
+                                </div>
+                                <div class="user-actions">
+                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>No students registered yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="dashboard-section">
+                <h2>
+                    <span><i class="fas fa-chalkboard-teacher"></i> Registered Teachers</span>
+                    <span class="badge bg-success">{{ teachers.count }}</span>
+                </h2>
+                {% if teachers %}
+                    <ul class="list-unstyled">
+                        {% for teacher in teachers %}
+                            <li class="user-list-item">
+                                <div class="user-info">
+                                    <div class="user-name">{{ teacher.name }}</div>
+                                    <div class="user-email">{{ teacher.email }}</div>
+                                </div>
+                                <div class="user-actions">
+                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <p>No teachers registered yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>
+            <span><i class="fas fa-bell"></i> System Notifications</span>
+            <span class="badge bg-warning">{{ notifications.count }}</span>
+        </h2>
+        {% if notifications %}
+            <ul class="list-unstyled">
+                {% for notification in notifications %}
+                    <li class="notification-list-item">
+                        <div class="notification-icon">
+                            {% if notification.type == 'system' %}
+                                <i class="fas fa-cog text-primary"></i>
+                            {% elif notification.type == 'security' %}
+                                <i class="fas fa-shield-alt text-danger"></i>
+                            {% elif notification.type == 'user' %}
+                                <i class="fas fa-user text-success"></i>
+                            {% else %}
+                                <i class="fas fa-bell text-secondary"></i>
+                            {% endif %}
+                        </div>
+                        <div class="notification-content">
+                            {{ notification.message }}
+                            <div class="notification-time">
+                                {{ notification.created_at|timesince }} ago
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-bell-slash"></i>
+                <p>No system notifications</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

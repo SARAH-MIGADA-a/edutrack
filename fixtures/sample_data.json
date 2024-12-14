@@ -1,0 +1,50 @@
+[
+    {
+        "model": "core.user",
+        "pk": 1,
+        "fields": {
+            "username": "admin_user",
+            "password": "pbkdf2_sha256$...",
+            "email": "admin@example.com",
+            "role": "admin",
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true
+        }
+    },
+    {
+        "model": "core.user",
+        "pk": 2,
+        "fields": {
+            "username": "teacher_user",
+            "password": "pbkdf2_sha256$...",
+            "email": "teacher@example.com",
+            "role": "teacher",
+            "is_active": true,
+            "is_staff": false,
+            "is_superuser": false
+        }
+    },
+    {
+        "model": "core.course",
+        "pk": 1,
+        "fields": {
+            "name": "Mathematics",
+            "code": "MATH101",
+            "description": "An introductory math course.",
+            "teacher": 2,
+            "created_at": "2024-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "core.course",
+        "pk": 2,
+        "fields": {
+            "name": "Physics",
+            "code": "PHYS101",
+            "description": "An introductory physics course.",
+            "teacher": 2,
+            "created_at": "2024-01-01T00:00:00Z"
+        }
+    }
+]
